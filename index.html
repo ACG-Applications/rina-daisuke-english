@@ -1,0 +1,3042 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Rina & Daisuke · English Adventure</title>
+    <style>
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+           RESET & BASE
+           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f7f2ec;
+            font-family: -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            color: #1a1a1a;
+            padding: 0.8rem;
+            min-height: 100vh;
+            font-size: 16px;
+            line-height: 1.6;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        .app {
+            max-width: 840px;
+            margin: 0 auto;
+        }
+
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+           HEADER
+           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+        .header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0 0.5rem;
+            border-bottom: 2px solid #e2cfbb;
+            margin-bottom: 1.2rem;
+            gap: 0.5rem;
+        }
+
+        .header-left {
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .header h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            letter-spacing: -0.02em;
+        }
+
+        .header .sub {
+            color: #4a3a2e;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-top: 0.1rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            flex-shrink: 0;
+        }
+
+        .help-btn {
+            background: #ede4db;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .help-btn:hover {
+            background: #dccbb8;
+        }
+
+        .help-btn:active {
+            transform: scale(0.96);
+        }
+
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+           PROGRESS DASHBOARD
+           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+        .progress-dashboard {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 1.2rem;
+            border: 1px solid #efe3d4;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .progress-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .progress-row .value {
+            color: #bc7a4a;
+        }
+
+        .progress-bar-track {
+            width: 100%;
+            height: 6px;
+            background: #ede4db;
+            border-radius: 20px;
+            margin-top: 0.4rem;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #bc7a4a, #d4a373);
+            border-radius: 20px;
+            transition: width 0.6s ease;
+            width: 0%;
+        }
+
+        .badges-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: 0.4rem;
+        }
+
+        .badge-small {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.15rem 0.6rem;
+            border-radius: 20px;
+            background: #ede4db;
+            color: #4a3a2e;
+            border: 1px solid #dccbb8;
+        }
+
+        .badge-small.unlocked {
+            background: #b8c9b0;
+            color: #1f3a1f;
+            border-color: #5f8f5f;
+        }
+
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+           SPEECH STATUS BANNER
+           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+        .speech-banner {
+            display: none;
+            border-radius: 16px;
+            padding: 0.9rem 1.2rem;
+            margin-bottom: 1.2rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .speech-banner.success {
+            display: block;
+            background: #e8f0e0;
+            border: 1px solid #b8c9b0;
+            color: #1f3a1f;
+        }
+
+        .speech-banner.warning {
+            display: block;
+            background: #f5e6d0;
+            border: 1px solid #d4b89b;
+            color: #4a2f1a;
+        }
+
+        .speech-banner .sub-text {
+            font-weight: 400;
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+           WEEK NAV
+           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+        .week-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            justify-content: center;
+            margin-bottom: 1.2rem;
+        }
+
+        .week-nav button {
+            background: #ede4db;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            min-height: 44px;
+        }
+
+        .week-nav button:hover {
+            background: #dccbb8;
+        }
+
+        .week-nav button.active {
+            background: #bc7a4a;
+            color: #fff;
+        }
+
+        .week-nav button.done {
+            background: #b8c9b0;
+            color: #1f3a1f;
+        }
+
+        .week-nav button.done::after {
+            content: " ✓";
+        }
+
+        .week-nav button:active {
+            transform: scale(0.95);
+        }
+
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+           MODE TOGGLE
+           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+        .mode-toggle {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            justify-content: center;
+            margin-bottom: 1.2rem;
+        }
+
+        .mode-toggle button {
+            background: #ede4db;
+            border: none;
+            padding: 0.6rem 1.8rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            min-height: 48px;
+        }
+
+        .mode-toggle button.active {
+            background: #1a1a1a;
+            color: #fff;
+        }
+
+        .mode-toggle button:hover:not(.active) {
+            background: #dccbb8;
+        }
+
+        .mode-toggle button:active {
+            transform: scale(0.95);
+        }
+
+        .mode-toggle .mode-hint {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #4a3a2e;
+            align-self: center;
+            margin-left: 0.5rem;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+           BLOCK CARD
+           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+        .block-card {
+            background: #ffffff;
+            border-radius: 28px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            padding: 1.2rem 1rem;
+            border: 1px solid #efe3d4;
+            margin-bottom: 1.5rem;
+        }
+
+        .block-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 0.2rem;
+        }
+
+        .block-sub {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #3d3d3d;
+            margin-bottom: 0.8rem;
+        }
+
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+           GRAMMAR TIP
+           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+        .grammar-tip {
+            background: #faf5ef;
+            padding: 0.6rem 1rem;
+            border-radius: 16px;
+            margin-bottom: 1rem;
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: #1a1a1a;
+        }
+
+        .grammar-tip strong {
+            color: #1a1a1a;
+        }
+
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+           VOCAB BANK
+           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+        .vocab-bank {
+            background: #f0f7ea;
+            padding: 0.8rem 1rem;
+            border-radius: 16px;
+            margin-bottom: 1rem;
+            border-left: 5px solid #5f8f5f;
+        }
+
+        .vocab-bank h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 0.4rem;
+        }
+
+        .vocab-item {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem 0.8rem;
+            padding: 0.2rem 0;
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: #1a1a1a;
+            border-bottom: 1px dashed #d4e0c8;
+        }
+
+        .vocab-item:last-child {
+            border-bottom: none;
+        }
+
+        .vocab-item .jp {
+            font-weight: 700;
+            color: #1a3a1a;
+        }
+
+        .vocab-item .en {
+            color: #3a5a3a;
+        }
+
+        .vocab-item .arrow {
+            color: #8a9a7a;
+        }
+
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+           CULTURE NOTE
+           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+        .culture-note {
+            background: #f5f0ea;
+            padding: 0.8rem 1rem;
+            border-radius: 16px;
+            margin-bottom: 1rem;
+            border-left: 5px solid #d4a373;
+        }
+
+        .culture-note h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 0.3rem;
+        }
+
+        .culture-note p {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #1a1a1a;
+            padding: 0.15rem 0;
+        }
+
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+           SPEAKING PRACTICE
+           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+        .speaking-practice {
+            background: #f5f0f7;
+            padding: 0.8rem 1rem;
+            border-radius: 16px;
+            margin-bottom: 1rem;
+            border-left: 5px solid #9f7abf;
+        }
+
+        .speaking-practice h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 0.3rem;
+        }
+
+        .speaking-practice .scenario {
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: #1a1a1a;
+            padding: 0.3rem 0;
+        }
+
+        .practice-btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.4rem;
+        }
+
+        .practice-btn {
+            background: #ffffff;
+            border: 1px solid #dccbb8;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.15s;
+            color: #1a1a1a;
+            min-height: 40px;
+        }
+
+        .practice-btn:hover {
+            background: #ede4db;
+        }
+
+        .practice-btn:active {
+            transform: scale(0.95);
+        }
+
+        .practice-btn.primary {
+            background: #bc7a4a;
+            color: #fff;
+            border-color: #bc7a4a;
+        }
+
+        .practice-btn.primary:hover {
+            background: #a8653a;
+        }
+
+        .practice-btn.recording {
+            background: #c62828;
+            color: #fff;
+            border-color: #c62828;
+            animation: pulse 1s infinite;
+        }
+
+        .practice-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+           RECORDING AREA
+           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+        .recording-area {
+            margin-top: 0.4rem;
+            padding: 0.6rem 0.8rem;
+            background: #faf5ef;
+            border-radius: 12px;
+            display: none;
+        }
+
+        .recording-area.active {
+            display: block;
+        }
+
+        .recording-area .status {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #4a3a2e;
+            margin-top: 0.2rem;
+        }
+
+        .recording-area .status.error {
+            color: #c62828;
+        }
+
+        .recording-area .status.success {
+            color: #2a5a2a;
+        }
+
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+           AUDIO SPEED CONTROL
+           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+        .audio-controls {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.8rem;
+            background: #faf5ef;
+            border-radius: 12px;
+            margin-bottom: 0.8rem;
+        }
+
+        .audio-controls label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .audio-controls input[type="range"] {
+            width: 100px;
+            accent-color: #bc7a4a;
+            cursor: pointer;
+        }
+
+        .audio-controls .speed-display {
+            font-weight: 700;
+            color: #bc7a4a;
+            min-width: 40px;
+        }
+
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+           DIALOGUE LINES
+           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+        .dialogue {
+            margin: 0.2rem 0 0.8rem;
+        }
+
+        .line {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            padding: 0.5rem 0.6rem;
+            border-radius: 12px;
+            margin-bottom: 0.2rem;
+            flex-wrap: wrap;
+            transition: background 0.15s;
+            min-height: 44px;
+        }
+
+        .line.clickable {
+            cursor: pointer;
+        }
+
+        .line.clickable:active {
+            background: #e8ddd0;
+            transform: scale(0.98);
+        }
+
+        .line.hidden-line .message {
+            color: #7a6a5a;
+            font-style: italic;
+        }
+
+        .line.hidden-line .message .tap-hint {
+            font-weight: 700;
+            color: #bc7a4a;
+        }
+
+        .line.revealed {
+            background: #f0f7ea;
+        }
+
+        .line.role-hidden .message {
+            color: #b0a090;
+            font-style: italic;
+        }
+
+        .role-tag {
+            font-weight: 700;
+            font-size: 0.75rem;
+            min-width: 60px;
+            padding: 0.15rem 0.5rem;
+            border-radius: 20px;
+            text-align: center;
+            flex-shrink: 0;
+            color: #1a1a1a;
+        }
+
+        .role-tony {
+            background: #f5e6c8;
+        }
+        .role-daisuke {
+            background: #c8dce8;
+        }
+        .role-rina {
+            background: #f5d6d6;
+        }
+        .role-jack {
+            background: #c8e8d6;
+        }
+        .role-thompson {
+            background: #e8dcc8;
+        }
+        .role-martinelli {
+            background: #e0c8e8;
+        }
+        .role-pub {
+            background: #d8d8d8;
+        }
+        .role-default {
+            background: #ede4db;
+        }
+
+        .message {
+            flex: 1;
+            font-size: 1rem;
+            font-weight: 500;
+            line-height: 1.6;
+            color: #1a1a1a;
+        }
+
+        .line-actions {
+            display: flex;
+            gap: 0.3rem;
+            flex-shrink: 0;
+            align-items: center;
+        }
+
+        .tts-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.15rem 0.4rem;
+            border-radius: 30px;
+            transition: 0.15s;
+            color: #5a4a3a;
+            min-height: 44px;
+            min-width: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tts-btn:hover {
+            background: #f0e8e0;
+        }
+
+        .tts-btn:active {
+            transform: scale(0.9);
+        }
+
+        .tts-btn.hidden-tts {
+            opacity: 0.25;
+            pointer-events: none;
+        }
+
+        .tts-btn.tts-unavailable {
+            opacity: 0.4;
+            cursor: not-allowed;
+            color: #a09080;
+        }
+
+        .hide-line-btn {
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 0.15rem 0.4rem;
+            border-radius: 30px;
+            transition: 0.15s;
+            color: #7a6a5a;
+            min-height: 44px;
+            min-width: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hide-line-btn:hover {
+            background: #f0e8e0;
+        }
+
+        .hide-line-btn:active {
+            transform: scale(0.9);
+        }
+
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+           PRACTICE CONTROLS
+           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+        .practice-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin: 0.8rem 0 1rem;
+            padding: 0.8rem 0.8rem;
+            background: #f7f2ec;
+            border-radius: 20px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .practice-controls .label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-right: 0.2rem;
+        }
+
+        .practice-controls button {
+            background: #ffffff;
+            border: 1px solid #dccbb8;
+            padding: 0.3rem 0.9rem;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.15s;
+            color: #1a1a1a;
+            min-height: 40px;
+        }
+
+        .practice-controls button:hover {
+            background: #ede4db;
+        }
+
+        .practice-controls button:active {
+            transform: scale(0.95);
+        }
+
+        .practice-controls button.active-role {
+            background: #1a1a1a;
+            color: #ffffff;
+            border-color: #1a1a1a;
+        }
+
+        .practice-controls .hint {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #4a3a2e;
+            margin-left: auto;
+            width: 100%;
+            text-align: center;
+            margin-top: 0.2rem;
+        }
+
+        .practice-controls .reveal-all-btn {
+            background: #bc7a4a;
+            color: #fff;
+            border-color: #bc7a4a;
+        }
+
+        .practice-controls .hide-all-btn {
+            background: #8b6f58;
+            color: #fff;
+            border-color: #8b6f58;
+        }
+
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+           COMPREHENSION
+           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+        .comprehension {
+            margin: 1.2rem 0 0.8rem;
+            padding-top: 1rem;
+            border-top: 2px dashed #e2cfbb;
+        }
+
+        .comprehension h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 0.6rem;
+        }
+
+        .quiz-item {
+            background: #faf5ef;
+            padding: 0.8rem 1rem;
+            border-radius: 16px;
+            margin-bottom: 0.6rem;
+        }
+
+        .quiz-item .q {
+            font-weight: 700;
+            font-size: 0.92rem;
+            color: #1a1a1a;
+        }
+
+        .quiz-item .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 0.4rem 0 0.2rem;
+        }
+
+        .quiz-item .options button {
+            background: #ffffff;
+            border: 1px solid #dccbb8;
+            padding: 0.3rem 1.2rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.15s;
+            color: #1a1a1a;
+            min-height: 44px;
+        }
+
+        .quiz-item .options button:hover {
+            background: #ede4db;
+        }
+
+        .quiz-item .options button:active {
+            transform: scale(0.95);
+        }
+
+        .quiz-item .options button.correct {
+            background: #b8c9b0;
+            border-color: #5f8f5f;
+            color: #1a3a1a;
+        }
+
+        .quiz-item .options button.wrong {
+            background: #f0d0d0;
+            border-color: #b06060;
+            color: #4a1a1a;
+        }
+
+        .quiz-item .answer-reveal {
+            margin-top: 0.4rem;
+            font-size: 0.88rem;
+            color: #2a5a2a;
+            font-weight: 600;
+            display: none;
+        }
+
+        .quiz-item .answer-reveal.show {
+            display: block;
+        }
+
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+           HOMEWORK
+           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+        .homework {
+            margin: 1.2rem 0 0.8rem;
+            padding: 1rem 1rem 0.8rem;
+            background: #f7efe7;
+            border-radius: 16px;
+            border-left: 5px solid #bc7a4a;
+        }
+
+        .homework h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 0.3rem;
+        }
+
+        .homework .hw-task {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #1a1a1a;
+            margin: 0.3rem 0;
+        }
+
+        .homework .hw-example {
+            font-size: 0.88rem;
+            color: #3d3d3d;
+            margin: 0.3rem 0;
+            padding-left: 0.8rem;
+            border-left: 3px solid #dccbb8;
+            font-weight: 500;
+        }
+
+        .homework .hw-note {
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: #4a3a2e;
+            margin-top: 0.4rem;
+        }
+
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+           HOMEWORK CHECK-IN
+           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+        .homework-checkin {
+            margin: 0.8rem 0 0.2rem;
+            padding: 0.8rem 1rem;
+            background: #e8f0f7;
+            border-radius: 16px;
+            border-left: 5px solid #3f6e9f;
+        }
+
+        .homework-checkin h4 {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #1a3a5a;
+            margin-bottom: 0.3rem;
+        }
+
+        .homework-checkin .checkin-prompt {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #1a1a1a;
+            margin: 0.2rem 0;
+        }
+
+        .homework-checkin .checkin-tip {
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: #3a5a7a;
+            margin-top: 0.3rem;
+            font-style: italic;
+        }
+
+        .homework-checkin .checkin-reveal {
+            margin-top: 0.3rem;
+            font-size: 0.85rem;
+            color: #2a5a7a;
+            cursor: pointer;
+            text-decoration: underline;
+            display: inline-block;
+            font-weight: 600;
+            min-height: 44px;
+            padding: 0.2rem 0;
+        }
+
+        .homework-checkin .checkin-answer {
+            margin-top: 0.3rem;
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: #1a3a5a;
+            background: #f0f5fa;
+            padding: 0.4rem 0.8rem;
+            border-radius: 12px;
+            display: none;
+        }
+
+        .homework-checkin .checkin-answer.show {
+            display: block;
+        }
+
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+           MY NOTES
+           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+        .notes-section {
+            margin: 1.2rem 0 0.8rem;
+            padding: 0.8rem 1rem;
+            background: #faf5ef;
+            border-radius: 16px;
+            border: 1px solid #e2cfbb;
+        }
+
+        .notes-section h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 0.3rem;
+        }
+
+        .notes-section textarea {
+            width: 100%;
+            min-height: 60px;
+            padding: 0.6rem;
+            border: 1px solid #dccbb8;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-family: inherit;
+            font-weight: 500;
+            color: #1a1a1a;
+            background: #ffffff;
+            resize: vertical;
+        }
+
+        .notes-section textarea:focus {
+            outline: none;
+            border-color: #bc7a4a;
+            box-shadow: 0 0 0 3px rgba(188, 122, 74, 0.15);
+        }
+
+        .notes-section .note-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.4rem;
+        }
+
+        .notes-section .note-actions button {
+            background: #ffffff;
+            border: 1px solid #dccbb8;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.15s;
+            color: #1a1a1a;
+            min-height: 40px;
+        }
+
+        .notes-section .note-actions button:hover {
+            background: #ede4db;
+        }
+
+        .notes-section .note-actions button.primary {
+            background: #bc7a4a;
+            color: #fff;
+            border-color: #bc7a4a;
+        }
+
+        .notes-section .save-status {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #4a7a4a;
+            margin-top: 0.2rem;
+            display: none;
+        }
+
+        .notes-section .save-status.show {
+            display: block;
+        }
+
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+           SELF ASSESSMENT
+           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+        .self-assessment {
+            margin: 1rem 0 0.5rem;
+            padding-top: 1rem;
+            border-top: 2px dashed #e2cfbb;
+        }
+
+        .self-assessment h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 0.5rem;
+        }
+
+        .sa-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.3rem 0;
+            font-size: 0.92rem;
+            font-weight: 500;
+            color: #1a1a1a;
+            flex-wrap: wrap;
+        }
+
+        .sa-item .stars {
+            display: flex;
+            gap: 0.2rem;
+        }
+
+        .sa-item .stars button {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            padding: 0 0.1rem;
+            transition: 0.15s;
+            color: #dccbb8;
+            min-height: 44px;
+            min-width: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sa-item .stars button.on {
+            color: #f5b342;
+        }
+
+        .sa-item .stars button:active {
+            transform: scale(0.9);
+        }
+
+        .sa-item .sa-label {
+            min-width: 130px;
+            font-weight: 600;
+        }
+
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+           MARK COMPLETE
+           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+        .mark-complete {
+            text-align: center;
+            margin: 1.2rem 0 0.2rem;
+        }
+
+        .mark-complete button {
+            background: #bc7a4a;
+            border: none;
+            padding: 0.7rem 2.5rem;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #fff;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            min-height: 52px;
+        }
+
+        .mark-complete button:hover {
+            background: #a8653a;
+        }
+
+        .mark-complete button:active {
+            transform: scale(0.95);
+        }
+
+        .mark-complete button.done {
+            background: #b8c9b0;
+            color: #1f3a1f;
+        }
+
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+           MODAL (How to Use)
+           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 1.2rem;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal {
+            background: #ffffff;
+            border-radius: 32px;
+            max-width: 560px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 1.5rem 1.5rem 1.2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .modal-close {
+            position: sticky;
+            top: 0;
+            float: right;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #4a3a2e;
+            padding: 0 0.4rem;
+            min-height: 44px;
+            min-width: 44px;
+            z-index: 10;
+            background: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 0.8rem;
+            margin-top: 0;
+            clear: both;
+        }
+
+        .modal h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-top: 0.8rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .modal p {
+            font-size: 0.92rem;
+            font-weight: 500;
+            color: #1a1a1a;
+            margin: 0.1rem 0;
+            line-height: 1.6;
+        }
+
+        .modal .jp {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .modal .en {
+            font-weight: 500;
+            color: #3d3d3d;
+            font-size: 0.85rem;
+        }
+
+        .modal .divider {
+            border-top: 1px solid #e2cfbb;
+            margin: 0.6rem 0;
+        }
+
+        .modal .dont-show {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin: 1rem 0 0.6rem;
+            padding: 0.4rem 0;
+        }
+
+        .modal .dont-show input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            accent-color: #bc7a4a;
+            flex-shrink: 0;
+        }
+
+        .modal .dont-show label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #1a1a1a;
+            cursor: pointer;
+        }
+
+        .modal .close-btn {
+            display: block;
+            width: 100%;
+            background: #1a1a1a;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #fff;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            min-height: 52px;
+            margin-top: 0.4rem;
+        }
+
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+           FOOTER
+           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+        .footer {
+            text-align: center;
+            padding: 1rem 0 2rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #6a5a4a;
+        }
+
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+           RESPONSIVE
+           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+        @media (max-width: 600px) {
+            body {
+                padding: 0.6rem;
+            }
+            .header h1 {
+                font-size: 1.3rem;
+            }
+            .block-card {
+                padding: 1rem 0.7rem;
+                border-radius: 20px;
+            }
+            .line {
+                padding: 0.4rem 0.4rem;
+                gap: 0.3rem;
+                min-height: 40px;
+            }
+            .role-tag {
+                font-size: 0.65rem;
+                min-width: 50px;
+                padding: 0.1rem 0.3rem;
+            }
+            .message {
+                font-size: 0.95rem;
+            }
+            .tts-btn {
+                font-size: 1.1rem;
+                min-height: 40px;
+                min-width: 40px;
+            }
+            .hide-line-btn {
+                font-size: 1rem;
+                min-height: 40px;
+                min-width: 40px;
+            }
+            .practice-controls {
+                padding: 0.6rem 0.5rem;
+                gap: 0.3rem;
+            }
+            .practice-controls button {
+                font-size: 0.7rem;
+                padding: 0.25rem 0.7rem;
+                min-height: 36px;
+            }
+            .quiz-item .options button {
+                font-size: 0.8rem;
+                padding: 0.25rem 0.9rem;
+                min-height: 40px;
+            }
+            .sa-item .sa-label {
+                min-width: 100px;
+                font-size: 0.85rem;
+            }
+            .sa-item .stars button {
+                font-size: 1.5rem;
+                min-height: 40px;
+                min-width: 40px;
+            }
+            .mode-toggle button {
+                padding: 0.5rem 1.4rem;
+                font-size: 0.85rem;
+                min-height: 44px;
+            }
+            .week-nav button {
+                font-size: 0.7rem;
+                padding: 0.4rem 0.7rem;
+                min-height: 38px;
+            }
+            .help-btn {
+                font-size: 0.75rem;
+                padding: 0.4rem 0.8rem;
+                min-height: 38px;
+            }
+            .modal {
+                padding: 1.2rem 1rem;
+                border-radius: 24px;
+            }
+            .modal h2 {
+                font-size: 1.2rem;
+            }
+            .modal p {
+                font-size: 0.85rem;
+            }
+            .mark-complete button {
+                padding: 0.6rem 2rem;
+                font-size: 0.92rem;
+                min-height: 48px;
+            }
+            .speech-banner {
+                font-size: 0.82rem;
+                padding: 0.7rem 1rem;
+            }
+            .progress-row {
+                font-size: 0.75rem;
+            }
+            .badge-small {
+                font-size: 0.6rem;
+                padding: 0.1rem 0.4rem;
+            }
+            .vocab-item {
+                font-size: 0.8rem;
+            }
+            .culture-note p {
+                font-size: 0.8rem;
+            }
+            .speaking-practice .scenario {
+                font-size: 0.82rem;
+            }
+            .audio-controls label {
+                font-size: 0.75rem;
+            }
+            .audio-controls input[type="range"] {
+                width: 70px;
+            }
+            .notes-section textarea {
+                min-height: 50px;
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .role-tag {
+                font-size: 0.6rem;
+                min-width: 42px;
+            }
+            .message {
+                font-size: 0.88rem;
+            }
+            .tts-btn {
+                font-size: 1rem;
+                min-height: 36px;
+                min-width: 36px;
+            }
+            .hide-line-btn {
+                font-size: 0.9rem;
+                min-height: 36px;
+                min-width: 36px;
+            }
+            .header h1 {
+                font-size: 1.1rem;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app" id="app">
+
+        <!-- ─── HEADER ─── -->
+        <div class="header">
+            <div class="header-left">
+                <h1>🎧 Rina &amp; Daisuke</h1>
+                <div class="sub">English Adventure · 6 Weeks to Confidence</div>
+            </div>
+            <div class="header-right">
+                <button class="help-btn" id="helpBtn">📖 使い方</button>
+            </div>
+        </div>
+
+        <!-- ─── PROGRESS DASHBOARD ─── -->
+        <div class="progress-dashboard" id="progressDashboard">
+            <div class="progress-row">
+                <span>📚 進捗 / Progress: <span class="value" id="completedCount">0</span>/6 weeks</span>
+                <span>⭐ 自信度 / Confidence: <span class="value" id="totalConfidence">0</span>%</span>
+                <span>🔥 連続 / Streak: <span class="value" id="streakCount">0</span> days</span>
+            </div>
+            <div class="progress-bar-track">
+                <div class="progress-bar-fill" id="overallProgress"></div>
+            </div>
+            <div class="badges-row" id="badgesRow">
+                <span class="badge-small" data-badge="first">🎯 Week 1</span>
+                <span class="badge-small" data-badge="all">🏆 All Weeks</span>
+                <span class="badge-small" data-badge="confident">💪 Confident</span>
+            </div>
+        </div>
+
+        <!-- ─── SPEECH STATUS BANNER ─── -->
+        <div class="speech-banner" id="speechBanner">
+            <span id="bannerMessage">🔊 音声機能が利用可能です / Voice available</span>
+            <div class="sub-text" id="bannerSub">✅ インターネット接続あり / Online</div>
+        </div>
+
+        <!-- ─── WEEK NAV ─── -->
+        <div class="week-nav" id="weekNav"></div>
+
+        <!-- ─── MODE TOGGLE ─── -->
+        <div class="mode-toggle">
+            <button class="active" data-mode="read">📖 Read &amp; Listen</button>
+            <button data-mode="teacher">👨‍🏫 Teacher Mode</button>
+            <span class="mode-hint" id="modeHint">📖 All lines visible · Tap 🔊 to listen</span>
+        </div>
+
+        <!-- ─── BLOCK CARD ─── -->
+        <div class="block-card" id="blockCard">
+            <div id="blockContent"></div>
+        </div>
+
+        <!-- ─── FOOTER ─── -->
+        <div class="footer">💾 進捗は自動保存されます / Progress saves automatically</div>
+    </div>
+
+    <!-- ─── MODAL (How to Use) ─── -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal" id="modal">
+            <button class="modal-close" id="modalCloseBtn">✕</button>
+            <h2>📖 使い方 / How to Use</h2>
+            <div class="divider"></div>
+            <h3>📖 リード＆リッスン / Read &amp; Listen</h3>
+            <p class="jp">すべてのセリフが表示されます。🔊をタップして音声を聞きます。</p>
+            <p class="en">All lines are visible. Tap 🔊 to listen.</p>
+            <h3>👨‍🏫 ティーチャーモード / Teacher Mode</h3>
+            <p class="jp">セリフが隠れています。タップして表示します。🙈で再び隠して、もう一度練習できます。</p>
+            <p class="en">Lines are hidden. Tap to reveal. Tap 🙈 to hide again and practice once more.</p>
+            <div class="divider"></div>
+            <div class="dont-show">
+                <input type="checkbox" id="dontShowAgain" />
+                <label for="dontShowAgain">次回から表示しない / Don't show again</label>
+            </div>
+            <button class="close-btn" id="modalCloseBtn2">閉じる / Close</button>
+        </div>
+    </div>
+
+    <script>
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  DATA — All 200 sentences across 6 weeks
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        const weeksData = [{
+            id: 1,
+            title: "First Day of Class & Homestay Life",
+            subtitle: "Introductions, backgrounds, and describing host families.",
+            grammar: "Present Simple (to be): am / is / are — 'I am 22', 'They are friendly'.",
+            openEnded: "Tell me about a friend you like to hang out with. What do you do together?",
+            vocab: [
+                { jp: "I am staying with...", en: "...に滞在しています" },
+                { jp: "They are very warm and friendly.", en: "彼らはとても温かくて親切です。" },
+                { jp: "Let's go around the screen.", en: "画面で順番に紹介しましょう。" }
+            ],
+            culture: {
+                note: "In Australia, people often greet with 'G'day' (Good day) and use 'mate' for friends.",
+                phrase: "G'day, mate! → こんにちは、友よ！"
+            },
+            speakingTask: "Introduce yourself to someone new. Say your name, where you're from, and one thing about you.",
+            homework: {
+                task: "When you meet new people, what do you usually say? Write 2-3 sentences about how you introduce yourself.",
+                example: "Example: 'Hello, my name is Yuki. I am from Tokyo. I am a student.'",
+                note: "Focus on being clear, not perfect!"
+            },
+            checkin: {
+                prompt: "Ask your students: 'How do you usually introduce yourself to new people?'",
+                tip: "If they're stuck, ask: 'What do you say first? What do you tell them about yourself?'",
+                suggested: "They might say: 'Hello, my name is... I am from... I am a...'"
+            },
+            lines: [
+                { role: "tony", speaker: "Tony", text: "Hello everyone, welcome to your first English class." },
+                { role: "tony", speaker: "Tony", text: "My name is Tony, and I am your teacher for the next few weeks." },
+                { role: "tony", speaker: "Tony", text: "Let's go around the screen and introduce ourselves." },
+                { role: "daisuke", speaker: "Daisuke", text: "Hello, my name is Daisuke." },
+                { role: "daisuke", speaker: "Daisuke", text: "I come from Japan, and I am 22 years old." },
+                { role: "daisuke", speaker: "Daisuke", text: "I am staying with the Thompson family in Australia for three months." },
+                { role: "rina", speaker: "Rina", text: "Hello! My name is Rina, and I am also 22 from Japan." },
+                { role: "rina", speaker: "Rina", text: "I am a visual artist, and I love painting pictures." },
+                { role: "tony", speaker: "Tony", text: "It is wonderful to meet you both." },
+                { role: "daisuke", speaker: "Daisuke", text: "Oh, wow! Rina, where are you staying in Australia?" },
+                { role: "rina", speaker: "Rina", text: "I am staying down the road from you with the Martinelli family." },
+                { role: "rina", speaker: "Rina", text: "They are Italian-Australians who moved here 60 years ago!" },
+                { role: "daisuke", speaker: "Daisuke", text: "That sounds like a very lively house." },
+                { role: "rina", speaker: "Rina", text: "Yes, it is! They have two daughters, Isabella and Conny." },
+                { role: "rina", speaker: "Rina", text: "Isabella is 13 years old, and Conny is 14." },
+                { role: "tony", speaker: "Tony", text: "Do they speak Italian or English at home, Rina?" },
+                { role: "rina", speaker: "Rina", text: "They speak a mix of both, so it is a bit confusing for me!" },
+                { role: "daisuke", speaker: "Daisuke", text: "Is it hard to understand them?" },
+                { role: "rina", speaker: "Rina", text: "Yes, but they are very warm and friendly." },
+                { role: "tony", speaker: "Tony", text: "What about your homestay, Daisuke?" },
+                { role: "daisuke", speaker: "Daisuke", text: "Mr. and Mrs. Thompson are very kind and quiet." },
+                { role: "daisuke", speaker: "Daisuke", text: "They have a son named Jack who is about my age." },
+                { role: "rina", speaker: "Rina", text: "That is great, you can hang out together." },
+                { role: "daisuke", speaker: "Daisuke", text: "Yes, Jack wants to show me around the local area." },
+                { role: "tony", speaker: "Tony", text: "It sounds like you both have excellent host families." },
+                { role: "rina", speaker: "Rina", text: "I hope so, but I am still quite nervous about my English." },
+                { role: "daisuke", speaker: "Daisuke", text: "Don't worry, Rina, we can practice together in this class." },
+                { role: "rina", speaker: "Rina", text: "Thank you, Daisuke, that makes me feel much better." },
+                { role: "tony", speaker: "Tony", text: "Exactly! This class is a safe place to make mistakes." },
+                { role: "tony", speaker: "Tony", text: "We will focus on conversation and listening every week." },
+                { role: "daisuke", speaker: "Daisuke", text: "Thank you, Tony, I am ready to learn." },
+                { role: "rina", speaker: "Rina", text: "Me too, let's do our best!" },
+                { role: "tony", speaker: "Tony", text: "Fantastic, let's get started with our first lesson." }
+            ],
+            quiz: [
+                { q: "How old are Daisuke and Rina?", options: ["20", "22", "24"], correct: 1 },
+                { q: "What family is Rina staying with?", options: ["Thompson", "Martinelli", "Johnson"], correct: 1 },
+                { q: "What is the name of the Thompsons' son?", options: ["Tony", "Jack", "Bert"], correct: 1 }
+            ]
+        }, {
+            id: 2,
+            title: "School Invitations & Making Weekend Plans",
+            subtitle: "Discussing future invitations, sharing hobbies, and planning a trip.",
+            grammar: "Modal verbs: can / cannot — 'I cannot do it yet', 'Can I visit near the end?'",
+            openEnded: "Do you prefer watching sports at a stadium or on TV? Why?",
+            vocab: [
+                { jp: "Can I visit near the end?", en: "終わり頃に訪ねてもいいですか？" },
+                { jp: "I cannot do it yet.", en: "まだできません。" },
+                { jp: "That sounds interesting!", en: "それは面白そうですね！" }
+            ],
+            culture: {
+                note: "Australian sports culture is huge! Rugby, cricket, and soccer are very popular.",
+                phrase: "Aussie Rules → オーストラリアンフットボール"
+            },
+            speakingTask: "Ask a friend: 'What are your plans for this weekend?' Practice asking and answering.",
+            homework: {
+                task: "Ask a family member or friend: 'What are your plans for this weekend?' Write down their answer in English.",
+                example: "Example: 'My sister said: I am going to the beach on Saturday.'",
+                note: "Try to understand their answer, not write it perfectly!"
+            },
+            checkin: {
+                prompt: "Ask your students: 'What did your friend or family member say about their weekend plans?'",
+                tip: "If they're stuck, ask: 'Where are they going? What are they doing?'",
+                suggested: "They might say: 'My friend is going to...' or 'My mother is staying at home.'"
+            },
+            lines: [
+                { role: "rina", speaker: "Rina", text: "Daisuke, did I tell you about the big question Isabella and Conny asked me?" },
+                { role: "daisuke", speaker: "Daisuke", text: "No, you didn't! What did they ask?" },
+                { role: "rina", speaker: "Rina", text: "They want me to come to their school to talk about Japan." },
+                { role: "daisuke", speaker: "Daisuke", text: "That sounds fun! Are you going to do it?" },
+                { role: "rina", speaker: "Rina", text: "I want to, but I told them I cannot do it yet." },
+                { role: "daisuke", speaker: "Daisuke", text: "Oh, why not?" },
+                { role: "rina", speaker: "Rina", text: "My English is not ready, and I am too shy right now." },
+                { role: "rina", speaker: "Rina", text: "I asked if I can visit the school near the end of my three months instead." },
+                { role: "daisuke", speaker: "Daisuke", text: "Good idea, your English will be much better by then!" },
+                { role: "tony", speaker: "Tony", text: "That is a very smart compromise, Rina." },
+                { role: "rina", speaker: "Rina", text: "Thanks, Tony. What are your plans for the weekend, Daisuke?" },
+                { role: "daisuke", speaker: "Daisuke", text: "Actually, Jack asked if we want to go to the city this Saturday." },
+                { role: "rina", speaker: "Rina", text: "Oh, that sounds interesting! What are you guys doing there?" },
+                { role: "daisuke", speaker: "Daisuke", text: "We are going to watch a big soccer match at the stadium." },
+                { role: "rina", speaker: "Rina", text: "To be honest, I don't really like sports." },
+                { role: "daisuke", speaker: "Daisuke", text: "Don't worry, Jack says there is an amazing art museum right next to the stadium!" },
+                { role: "rina", speaker: "Rina", text: "Really? An art museum?" },
+                { role: "daisuke", speaker: "Daisuke", text: "Yes, he said it has beautiful Australian paintings." },
+                { role: "rina", speaker: "Rina", text: "In that case, I definitely want to come with you guys." },
+                { role: "daisuke", speaker: "Daisuke", text: "Awesome! Did you play any sports at school in Japan, Rina?" },
+                { role: "rina", speaker: "Rina", text: "No, I did not play sports at all, I just painted pictures. What about you?" },
+                { role: "daisuke", speaker: "Daisuke", text: "I played American gridiron at my university." },
+                { role: "rina", speaker: "Rina", text: "Wow, gridiron sounds very tough and exciting." },
+                { role: "daisuke", speaker: "Daisuke", text: "It was hard work, but I loved it." },
+                { role: "rina", speaker: "Rina", text: "Does Jack play sports too?" },
+                { role: "daisuke", speaker: "Daisuke", text: "Yes, Jack played rugby when he was at school." },
+                { role: "rina", speaker: "Rina", text: "Australia seems to love sports very much." },
+                { role: "daisuke", speaker: "Daisuke", text: "It really does! So, let's catch the train together on Saturday morning." },
+                { role: "rina", speaker: "Rina", text: "What time should we meet at the station?" },
+                { role: "daisuke", speaker: "Daisuke", text: "Is 10:00 AM okay for you?" },
+                { role: "rina", speaker: "Rina", text: "Yes, 10:00 AM is perfect, see you there!" },
+                { role: "daisuke", speaker: "Daisuke", text: "Great, I will tell Jack the plan." },
+                { role: "tony", speaker: "Tony", text: "Have a wonderful time in the city, you two!" }
+            ],
+            quiz: [
+                { q: "When does Rina want to visit Isabella and Conny's school?", options: ["Next week", "Near the end of her three months", "Tomorrow"], correct: 1 },
+                { q: "What sport did Daisuke play at his university in Japan?", options: ["Rugby", "Gridiron", "Soccer"], correct: 1 },
+                { q: "What time are Daisuke and Rina meeting at the train station?", options: ["9:00 AM", "10:00 AM", "11:00 AM"], correct: 1 }
+            ]
+        }, {
+            id: 3,
+            title: "Traveling to the City & The Art Gallery",
+            subtitle: "Travel vocabulary, describing surroundings, and sharing visual impressions.",
+            grammar: "Irregular past verbs: won — 'Our team won the match.'",
+            openEnded: "What is the most exciting sporting event you have ever seen?",
+            vocab: [
+                { jp: "Our team won the match!", en: "私たちのチームが試合に勝ちました！" },
+                { jp: "The atmosphere is crazy!", en: "雰囲気がすごいです！" },
+                { jp: "I am taking lots of photos.", en: "たくさん写真を撮っています。" }
+            ],
+            culture: {
+                note: "Australian cities have beautiful street art. Melbourne is especially famous for it!",
+                phrase: "Street art → ストリートアート (路上芸術)"
+            },
+            speakingTask: "Describe what you see outside your window. Use colours and size words.",
+            homework: {
+                task: "Look outside your window. What do you see? Write 2-3 sentences describing it.",
+                example: "Example: 'I see a tall building. The sky is blue. There are cars on the street.'",
+                note: "Use colours and size words like 'big', 'small', 'tall', 'beautiful'."
+            },
+            checkin: {
+                prompt: "Ask your students: 'What did you see outside your window? Describe it to me.'",
+                tip: "If they're stuck, ask: 'What colour is it? Is it big or small? What else do you see?'",
+                suggested: "They might say: 'I see a green tree. The sky is grey. There is a car.'"
+            },
+            lines: [
+                { role: "jack", speaker: "Jack", text: "Good morning, Daisuke and Rina! Welcome to the train station." },
+                { role: "daisuke", speaker: "Daisuke", text: "Morning, Jack! Let's get our train tickets here." },
+                { role: "rina", speaker: "Rina", text: "Wow, the train is so fast and clean inside." },
+                { role: "daisuke", speaker: "Daisuke", text: "Look out the window, Rina, we are entering the city now." },
+                { role: "rina", speaker: "Rina", text: "Oh my goodness, those massive buildings look like glass towers!" },
+                { role: "jack", speaker: "Jack", text: "Welcome to the city center, guys!" },
+                { role: "jack", speaker: "Jack", text: "Let's stop at the art museum first so Rina can look around." },
+                { role: "rina", speaker: "Rina", text: "Wow, thank you, Jack, this gallery is absolutely beautiful." },
+                { role: "daisuke", speaker: "Daisuke", text: "Look at these paintings, Rina, what do you think?" },
+                { role: "rina", speaker: "Rina", text: "These Australian artists use so many bright, earthy colors." },
+                { role: "rina", speaker: "Rina", text: "One day, I hope to be a resident artist in this country." },
+                { role: "daisuke", speaker: "Daisuke", text: "You can definitely do it, Rina, your artwork is amazing." },
+                { role: "rina", speaker: "Rina", text: "Thank you, Daisuke, I am taking lots of photos for inspiration." },
+                { role: "jack", speaker: "Jack", text: "Alright team, it's time to head over to the soccer stadium now." },
+                { role: "daisuke", speaker: "Daisuke", text: "Wow, the stadium is packed with fans today." },
+                { role: "rina", speaker: "Rina", text: "You are right, the crowd is incredibly loud!" },
+                { role: "jack", speaker: "Jack", text: "Our seats are right down near the front of the field." },
+                { role: "daisuke", speaker: "Daisuke", text: "Look, the players are running out now, the game is starting!" },
+                { role: "jack", speaker: "Jack", text: "Come on, team, score a goal!" },
+                { role: "rina", speaker: "Rina", text: "Everyone is cheering and jumping up and down around us." },
+                { role: "daisuke", speaker: "Daisuke", text: "This is so exciting, the atmosphere is crazy!" },
+                { role: "jack", speaker: "Jack", text: "Yes! The game is over and our team won the match!" },
+                { role: "daisuke", speaker: "Daisuke", text: "What a match, that final goal was incredible." },
+                { role: "rina", speaker: "Rina", text: "I didn't think I would enjoy it, but that was actually very fun." },
+                { role: "rina", speaker: "Rina", text: "I even took some great photos of the stadium for my art." },
+                { role: "jack", speaker: "Jack", text: "Brilliant! Let's celebrate the win, I know a good pub nearby." },
+                { role: "daisuke", speaker: "Daisuke", text: "Sounds good, I am very thirsty after all that cheering." },
+                { role: "rina", speaker: "Rina", text: "Lead the way, Jack!" }
+            ],
+            quiz: [
+                { q: "What do the city buildings look like to Rina?", options: ["Glass towers", "Wooden houses", "Stone castles"], correct: 0 },
+                { q: "What kind of colors do the Australian paintings use?", options: ["Bright, earthy colors", "Dark, dull colors", "Only black and white"], correct: 0 },
+                { q: "Did the team win or lose the soccer match?", options: ["Won", "Lost", "It was a tie"], correct: 0 }
+            ]
+        }, {
+            id: 4,
+            title: "Socializing at the Local Pub",
+            subtitle: "Introductions, managing fast English, and learning local phrases.",
+            grammar: "Polite request: 'Could you please speak a bit slower?'",
+            openEnded: "Do you like street art on walls, or do you prefer art inside a frame at a museum?",
+            vocab: [
+                { jp: "Could you please speak a bit slower?", en: "もう少しゆっくり話してもらえますか？" },
+                { jp: "No worries, mate!", en: "大丈夫だよ、友よ！" },
+                { jp: "Cheers!", en: "乾杯！／ありがとう！" }
+            ],
+            culture: {
+                note: "'Cheers' in Australia can mean 'thank you' OR 'goodbye' OR used when drinking!",
+                phrase: "Cheers, mate! → ありがとう、友よ！"
+            },
+            speakingTask: "Practice using 'Could you please speak slower?' with a partner.",
+            homework: {
+                task: "Try using a polite phrase this week. Say 'Could you please speak slower?' to someone. How did they react?",
+                example: "Example: 'I asked my teacher to speak slower. She smiled and said okay.'",
+                note: "Notice how people respond when you ask politely in English!"
+            },
+            checkin: {
+                prompt: "Ask your students: 'Did you try using the polite phrase this week? What happened?'",
+                tip: "If they're stuck, ask: 'Who did you ask? How did they react? Did they understand you?'",
+                suggested: "They might say: 'I asked my teacher. She spoke slower. I understood more.'"
+            },
+            lines: [
+                { role: "daisuke", speaker: "Daisuke", text: "To be honest, Jack, I don't really know what a pub is." },
+                { role: "jack", speaker: "Jack", text: "No worries, mate! It's just a casual place to grab a drink and relax." },
+                { role: "rina", speaker: "Rina", text: "Wow, it is very noisy and crowded in here." },
+                { role: "jack", speaker: "Jack", text: "It's a popular spot on Saturdays! Hey look, my mates are over there." },
+                { role: "jack", speaker: "Jack", text: "Hey guys, these are my friends Daisuke and Rina from Japan." },
+                { role: "pub", speaker: "Friend 1", text: "G'day! Welcome to Australia, guys." },
+                { role: "pub", speaker: "Friend 2", text: "Jack told us you played gridiron back home, Daisuke?" },
+                { role: "daisuke", speaker: "Daisuke", text: "I am sorry, I don't quite understand what you said." },
+                { role: "rina", speaker: "Rina", text: "Could you please speak a bit slower for us?" },
+                { role: "pub", speaker: "Friend 2", text: "Oh, sorry about that! Did... you... play... football... in... Japan?" },
+                { role: "daisuke", speaker: "Daisuke", text: "Ah, yes! I played gridiron for two years at my university." },
+                { role: "pub", speaker: "Friend 1", text: "That is so cool, mate! It's a very tough sport." },
+                { role: "pub", speaker: "Friend 1", text: "What about you, Rina, do you like football?" },
+                { role: "rina", speaker: "Rina", text: "Not really, I prefer visual art, painting, and drawing." },
+                { role: "pub", speaker: "Friend 2", text: "Brilliant! You should check out the street art in the alleyways around here." },
+                { role: "rina", speaker: "Rina", text: "Wow, street art? I would love to see that later." },
+                { role: "pub", speaker: "Friend 1", text: "The local artists here are very talented." },
+                { role: "daisuke", speaker: "Daisuke", text: "Everyone in Australia is very welcoming and friendly." },
+                { role: "jack", speaker: "Jack", text: "We really are! Let's grab some drinks now, what do you want?" },
+                { role: "daisuke", speaker: "Daisuke", text: "Just a cold beer for me, thanks Jack." },
+                { role: "jack", speaker: "Jack", text: "Easy. What about you, Rina?" },
+                { role: "rina", speaker: "Rina", text: "Just an apple juice for me, please." },
+                { role: "jack", speaker: "Jack", text: "Coming right up. Cheers, everyone, to a great day out!" },
+                { role: "daisuke", speaker: "Daisuke", text: "Cheers! Thank you for introducing us to your friends." },
+                { role: "rina", speaker: "Rina", text: "Cheers! It was very nice to meet you all." },
+                { role: "pub", speaker: "Friend 1", text: "No worries, guys, enjoy your stay in Australia!" },
+                { role: "pub", speaker: "Friend 2", text: "Yeah, see you around, mates!" }
+            ],
+            quiz: [
+                { q: "What phrase does Rina use to ask the friends to slow down?", options: ["Could you please speak a bit slower?", "Talk slower!", "I don't understand anything"], correct: 0 },
+                { q: "What type of art does Friend 2 recommend Rina check out?", options: ["Street art", "Museum art", "Sculpture"], correct: 0 },
+                { q: "What drinks do Daisuke and Rina order?", options: ["Beer and apple juice", "Wine and water", "Soda and coffee"], correct: 0 }
+            ]
+        }, {
+            id: 5,
+            title: "Heading Home & Dinner Conversations",
+            subtitle: "Saying goodbye to friends, describing food culture, and future meals.",
+            grammar: "Adverbs of frequency: usually / often — 'We usually eat rice', 'We often drink green tea.'",
+            openEnded: "What is your favorite thing to eat when you are very hungry?",
+            vocab: [
+                { jp: "We usually eat rice and fish.", en: "私たちは普段ご飯と魚を食べます。" },
+                { jp: "We often drink green tea.", en: "私たちはよく緑茶を飲みます。" },
+                { jp: "This smells incredible!", en: "これは信じられないほどの匂いです！" }
+            ],
+            culture: {
+                note: "Australian barbecue (barbie) is a big part of the culture. 'Throw another shrimp on the barbie!'",
+                phrase: "Barbie → バーベキュー (BBQ)"
+            },
+            speakingTask: "Ask someone: 'What is your favorite food?' Write down their answer.",
+            homework: {
+                task: "Ask someone: 'What is your favourite food?' Write their answer.",
+                example: "Example: 'My mother said: My favourite food is sushi.'",
+                note: "Listen carefully and try to write what they say in English."
+            },
+            checkin: {
+                prompt: "Ask your students: 'What is your friend or family member's favourite food?'",
+                tip: "If they're stuck, ask: 'What did they say? Can you tell me in English?'",
+                suggested: "They might say: 'My friend likes ramen.' or 'My mother loves pizza.'"
+            },
+            lines: [
+                { role: "rina", speaker: "Rina", text: "Well, the train is back at our local station now." },
+                { role: "rina", speaker: "Rina", text: "Bye Daisuke, bye Jack! See you at school on Monday." },
+                { role: "daisuke", speaker: "Daisuke", text: "See you on Monday, Rina! Have a good night." },
+                { role: "jack", speaker: "Jack", text: "Take care, Rina! Tell the Martinellis we said hello." },
+                { role: "rina", speaker: "Rina", text: "I will! Mrs. Martinelli, I am home!" },
+                { role: "martinelli", speaker: "Mrs. Martinelli", text: "Welcome back, Rina! Come into the kitchen, dinner is ready." },
+                { role: "martinelli", speaker: "Isabella", text: "How was the city, Rina? Did you see any cool art?" },
+                { role: "rina", speaker: "Rina", text: "Yes, the museum was amazing, and I took many photos on my phone." },
+                { role: "martinelli", speaker: "Conny", text: "Sit down here, Rina, we are having homemade lasagna tonight." },
+                { role: "rina", speaker: "Rina", text: "Wow, this smells absolutely incredible, thank you." },
+                { role: "martinelli", speaker: "Mr. Martinelli", text: "Do you eat Italian food back in Japan, Rina?" },
+                { role: "rina", speaker: "Rina", text: "Yes, we eat pasta and pizza, but it tastes a bit different in Japan." },
+                { role: "martinelli", speaker: "Mrs. Martinelli", text: "What is a traditional dinner like in your home country?" },
+                { role: "rina", speaker: "Rina", text: "We usually eat rice, grilled fish, noodles, and miso soup." },
+                { role: "martinelli", speaker: "Isabella", text: "Miso soup? I really want to try that one day!" },
+                { role: "rina", speaker: "Rina", text: "I can cook it for the family next week if you like." },
+                { role: "martinelli", speaker: "Mrs. Martinelli", text: "That sounds wonderful, Rina, we would love that." },
+                { role: "daisuke", speaker: "Daisuke", text: "Meanwhile, at the Thompson house, Daisuke and Jack walk through the door." },
+                { role: "jack", speaker: "Jack", text: "Hey Mum, hey Dad, we are home!" },
+                { role: "thompson", speaker: "Jane Thompson", text: "Welcome back, boys! How was your day in the city?" },
+                { role: "daisuke", speaker: "Daisuke", text: "It was wonderful, thank you, Jane." },
+                { role: "thompson", speaker: "Jane Thompson", text: "Have a seat at the table, dinner is served." },
+                { role: "daisuke", speaker: "Daisuke", text: "Wow, this roast dinner smells amazing too." },
+                { role: "thompson", speaker: "Bert Thompson", text: "So Daisuke, what do people usually drink with dinner in Japan?" },
+                { role: "daisuke", speaker: "Daisuke", text: "We often drink green tea or water with our meals." },
+                { role: "thompson", speaker: "Jane Thompson", text: "Do you like the Australian food here so far?" },
+                { role: "daisuke", speaker: "Daisuke", text: "Yes, I like steak, roasts, and potatoes very much." },
+                { role: "thompson", speaker: "Bert Thompson", text: "Great, because tomorrow we are having a classic Aussie barbecue!" },
+                { role: "daisuke", speaker: "Daisuke", text: "Oh wow, I really want to try an authentic barbecue." },
+                { role: "thompson", speaker: "Jane Thompson", text: "Please, have some more food on your plate, Daisuke." },
+                { role: "daisuke", speaker: "Daisuke", text: "Thank you, but I am very full now, everything was delicious." },
+                { role: "jack", speaker: "Jack", text: "Dinner was excellent, Mum, thank you." },
+                { role: "thompson", speaker: "Jane Thompson", text: "Thanks, love, I am glad you all enjoyed it." }
+            ],
+            quiz: [
+                { q: "What food did the Martinelli family make for Rina?", options: ["Lasagna", "Sushi", "Barbecue"], correct: 0 },
+                { q: "What ingredients does Rina say are in a traditional Japanese dinner?", options: ["Rice, fish, noodles, miso soup", "Pasta, pizza, salad", "Steak, potatoes, roast"], correct: 0 },
+                { q: "What kind of dinner are the Thompsons hosting tomorrow?", options: ["Barbecue", "Roast dinner", "Italian food"], correct: 0 }
+            ]
+        }, {
+            id: 6,
+            title: "Language Fatigue, Encouragement & Gratitude",
+            subtitle: "Discussing mental tiredness, receiving support, and showing deep appreciation.",
+            grammar: "Conversational shortcuts (contractions): don't, it's, you're, didn't.",
+            openEnded: "When you feel very tired, what is your favorite way to relax?",
+            vocab: [
+                { jp: "I feel very tired and exhausted.", en: "とても疲れて疲れ果てています。" },
+                { jp: "Don't stress, these things take time.", en: "心配しないで、時間がかかるものです。" },
+                { jp: "You are doing a fantastic job.", en: "素晴らしい仕事をしていますよ。" }
+            ],
+            culture: {
+                note: "Australians often use 'don't stress' or 'no worries' to reassure people.",
+                phrase: "Don't stress, mate! → 心配しないで、友よ！"
+            },
+            speakingTask: "Think about this week. What English word or phrase is now easier to understand?",
+            homework: {
+                task: "Think about this week. What English word or phrase is now easier to understand than before?",
+                example: "Example: 'I understand 'Could you please speak slower?' better now.'",
+                note: "Reflect on your progress. Every small step counts!"
+            },
+            checkin: {
+                prompt: "Ask your students: 'What is one thing in English that feels easier now than in Week 1?'",
+                tip: "If they're stuck, ask: 'Can you understand more words? Do you feel more confident speaking?'",
+                suggested: "They might say: 'I understand 'hello' and 'thank you' better.' or 'I feel less nervous now.'"
+            },
+            lines: [
+                { role: "thompson", speaker: "Bert Thompson", text: "You look a bit quiet tonight, Daisuke." },
+                { role: "daisuke", speaker: "Daisuke", text: "Yeah, sorry about that, Bert." },
+                { role: "daisuke", speaker: "Daisuke", text: "I have been in Australia for a whole week now." },
+                { role: "thompson", speaker: "Jane Thompson", text: "Are you feeling alright, dear?" },
+                { role: "daisuke", speaker: "Daisuke", text: "Honestly, I feel very tired and exhausted today." },
+                { role: "jack", speaker: "Jack", text: "Yeah, using a new language all day is really draining for the brain." },
+                { role: "daisuke", speaker: "Daisuke", text: "Yes, understanding English is still very difficult for me." },
+                { role: "thompson", speaker: "Bert Thompson", text: "Don't stress, mate, these things take time." },
+                { role: "thompson", speaker: "Jane Thompson", text: "You are doing a really fantastic job, Daisuke." },
+                { role: "daisuke", speaker: "Daisuke", text: "Thank you, you are both so kind to me." },
+                { role: "daisuke", speaker: "Daisuke", text: "Down the road, Rina is also sitting with her host family." },
+                { role: "martinelli", speaker: "Mrs. Martinelli", text: "Rina, you look a bit tired tonight as well, dear." },
+                { role: "rina", speaker: "Rina", text: "Yes, I am feeling a little overwhelmed today." },
+                { role: "martinelli", speaker: "Conny", text: "Is it because of all the English listening?" },
+                { role: "rina", speaker: "Rina", text: "Yes, my brain is very tired from translating words all day long." },
+                { role: "martinelli", speaker: "Isabella", text: "Don't worry, Rina, your English is already getting better!" },
+                { role: "martinelli", speaker: "Mr. Martinelli", text: "It's true, learning a new language is like climbing a high mountain." },
+                { role: "martinelli", speaker: "Mrs. Martinelli", text: "Just take it easy, you are doing a wonderful job here." },
+                { role: "rina", speaker: "Rina", text: "Thank you all so much, your encouraging words make me happy." },
+                { role: "daisuke", speaker: "Daisuke", text: "I think I need to go to bed now, everyone." },
+                { role: "rina", speaker: "Rina", text: "Me too, I am ready to sleep." },
+                { role: "daisuke", speaker: "Daisuke", text: "Thanks for helping me out with my words every day." },
+                { role: "rina", speaker: "Rina", text: "Thank you for welcoming me into your beautiful home." },
+                { role: "daisuke", speaker: "Daisuke", text: "And thank you for hosting me so warmly." },
+                { role: "jack", speaker: "Jack", text: "No worries, mate. Sleep well." },
+                { role: "martinelli", speaker: "Isabella", text: "Goodnight, Rina! See you tomorrow." },
+                { role: "thompson", speaker: "Jane Thompson", text: "See you in the morning, Daisuke, get some rest." },
+                { role: "martinelli", speaker: "Conny", text: "Sleep well, Rina, don't dream in English tonight!" },
+                { role: "thompson", speaker: "Bert Thompson", text: "Goodnight, Daisuke, have a good sleep." },
+                { role: "martinelli", speaker: "Mrs. Martinelli", text: "Sweet dreams, Rina, have a good rest." },
+                { role: "martinelli", speaker: "Mr. Martinelli", text: "Goodnight, see you tomorrow!" },
+                { role: "daisuke", speaker: "Daisuke", text: "Goodnight, everyone." },
+                { role: "rina", speaker: "Rina", text: "Goodnight, everyone." },
+                { role: "daisuke", speaker: "Daisuke", text: "I am really happy to be here in Australia." },
+                { role: "rina", speaker: "Rina", text: "I am very happy to stay with this family too." },
+                { role: "daisuke", speaker: "Daisuke", text: "Hopefully, tomorrow will be an easier day for us." },
+                { role: "rina", speaker: "Rina", text: "Tomorrow will be a brand new day for our art and English." },
+                { role: "daisuke", speaker: "Daisuke", text: "See you at school on Monday, Rina." },
+                { role: "rina", speaker: "Rina", text: "See you on Monday, Daisuke." },
+                { role: "tony", speaker: "Tony", text: "On Monday morning, both students log into their class." },
+                { role: "tony", speaker: "Tony", text: "Good morning, Daisuke and Rina, did you rest well?" },
+                { role: "daisuke", speaker: "Daisuke", text: "Yes, Tony, I slept for nine hours!" },
+                { role: "rina", speaker: "Rina", text: "Yes, I feel fresh and ready to speak English today." },
+                { role: "tony", speaker: "Tony", text: "That is what I love to hear." },
+                { role: "tony", speaker: "Tony", text: "Let's begin our second week of English conversation." },
+                { role: "daisuke", speaker: "Daisuke", text: "Yes, let's go!" },
+                { role: "rina", speaker: "Rina", text: "Yes, let's go!" }
+            ],
+            quiz: [
+                { q: "Why does Jack say Daisuke's brain is feeling drained?", options: ["Using a new language all day", "Playing too much sport", "Eating too much food"], correct: 0 },
+                { q: "What does Mr. Martinelli compare learning a language to?", options: ["Climbing a high mountain", "Running a race", "Swimming in the ocean"], correct: 0 },
+                { q: "How many hours did Daisuke sleep over the weekend?", options: ["Seven", "Eight", "Nine"], correct: 2 }
+            ]
+        }];
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  MICROPHONE CHECK - Only checks if devices exist
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+async function checkMicrophoneAvailability() {
+    try {
+        // Only check if there are any audio input devices
+        // Do NOT call getUserMedia() here - that triggers the permission prompt
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const audioInputs = devices.filter(d => d.kind === 'audioinput');
+        
+        if (audioInputs.length === 0) {
+            return { 
+                available: false, 
+                message: '🎤 マイクが見つかりません。マイクを接続してください。 / No microphone found. Please connect a microphone.',
+                shortMessage: '🔇 マイクなし / No Mic'
+            };
+        }
+        
+        // Device exists, but we don't know if permission is granted yet
+        // That will be checked when user clicks Record
+        return { 
+            available: true,
+            message: '✅ マイクが見つかりました / Microphone found',
+            shortMessage: '🎙️ 録音可能 / Ready'
+        };
+    } catch (err) {
+        return { 
+            available: false, 
+            message: '❌ マイクを確認できません / Cannot check microphone',
+            shortMessage: '❌ エラー / Error'
+        };
+    }
+}
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  STATE
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        let currentWeek = 0;
+        let currentMode = 'read';
+        let hiddenRoles = new Set();
+        let revealedLines = new Set();
+        let quizRevealed = {};
+        let starRatings = {};
+        let completedWeeks = new Set();
+        let checkinRevealed = {};
+        let ttsAvailable = false;
+        let ttsChecked = false;
+        let speedRate = 0.85;
+        let weekNotes = {};
+        let streakDays = 0;
+        let lastStudyDate = null;
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  LOCAL STORAGE
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        function loadState() {
+            try {
+                const saved = localStorage.getItem('rinaDaisukeApp_v2');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    if (data.completedWeeks) completedWeeks = new Set(data.completedWeeks);
+                    if (data.starRatings) starRatings = data.starRatings;
+                    if (data.hiddenRoles) hiddenRoles = new Set(data.hiddenRoles);
+                    if (data.revealedLines) revealedLines = new Set(data.revealedLines);
+                    if (data.checkinRevealed) checkinRevealed = data.checkinRevealed;
+                    if (data.weekNotes) weekNotes = data.weekNotes;
+                    if (data.streakDays) streakDays = data.streakDays;
+                    if (data.lastStudyDate) lastStudyDate = data.lastStudyDate;
+                    if (data.speedRate) speedRate = data.speedRate;
+                }
+            } catch (_) {}
+        }
+
+        function saveState() {
+            try {
+                const data = {
+                    completedWeeks: Array.from(completedWeeks),
+                    starRatings: starRatings,
+                    hiddenRoles: Array.from(hiddenRoles),
+                    revealedLines: Array.from(revealedLines),
+                    checkinRevealed: checkinRevealed,
+                    weekNotes: weekNotes,
+                    streakDays: streakDays,
+                    lastStudyDate: lastStudyDate,
+                    speedRate: speedRate
+                };
+                localStorage.setItem('rinaDaisukeApp_v2', JSON.stringify(data));
+            } catch (_) {}
+        }
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  SPEECH
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        function checkTTSAvailability() {
+            return new Promise((resolve) => {
+                if (!window.speechSynthesis) {
+                    ttsAvailable = false;
+                    ttsChecked = true;
+                    updateSpeechBanner();
+                    resolve(false);
+                    return;
+                }
+
+                let voices = window.speechSynthesis.getVoices();
+                if (voices && voices.length > 0) {
+                    ttsAvailable = true;
+                    ttsChecked = true;
+                    updateSpeechBanner();
+                    resolve(true);
+                    return;
+                }
+
+                let attempts = 0;
+                const maxAttempts = 6;
+                const interval = setInterval(() => {
+                    attempts++;
+                    voices = window.speechSynthesis.getVoices();
+                    if (voices && voices.length > 0) {
+                        ttsAvailable = true;
+                        ttsChecked = true;
+                        clearInterval(interval);
+                        updateSpeechBanner();
+                        resolve(true);
+                    } else if (attempts >= maxAttempts) {
+                        ttsAvailable = false;
+                        ttsChecked = true;
+                        clearInterval(interval);
+                        updateSpeechBanner();
+                        resolve(false);
+                    }
+                }, 500);
+            });
+        }
+
+        function updateSpeechBanner() {
+            const banner = document.getElementById('speechBanner');
+            const msg = document.getElementById('bannerMessage');
+            const sub = document.getElementById('bannerSub');
+
+            if (!banner || !msg || !sub) return;
+
+            if (!ttsChecked) {
+                banner.className = 'speech-banner';
+                return;
+            }
+
+            if (ttsAvailable) {
+                banner.className = 'speech-banner success';
+                msg.textContent = '🔊 音声機能が利用可能です / Voice available';
+                sub.textContent = '✅ インターネット接続あり / Online';
+            } else {
+                banner.className = 'speech-banner warning';
+                msg.textContent = '🔇 音声機能が利用できません / Voice unavailable';
+                sub.textContent = '📶 インターネット接続を確認するか、Safariをお使いください / Check internet or use Safari';
+            }
+        }
+
+        function speakText(text) {
+            if (!ttsAvailable) {
+                updateSpeechBanner();
+                return;
+            }
+
+            if (!window.speechSynthesis) {
+                ttsAvailable = false;
+                updateSpeechBanner();
+                return;
+            }
+
+            try {
+                window.speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(text);
+                u.lang = 'en-AU';
+                u.rate = speedRate;
+                u.pitch = 1.0;
+
+                const voices = window.speechSynthesis.getVoices();
+                const aussie = voices.find(v => v.lang.includes('en-AU'));
+                if (aussie) u.voice = aussie;
+
+                window.speechSynthesis.speak(u);
+
+                // Update streak
+                updateStreak();
+            } catch (_) {
+                ttsAvailable = false;
+                updateSpeechBanner();
+            }
+        }
+
+        function updateStreak() {
+            const today = new Date().toISOString().split('T')[0];
+            if (lastStudyDate !== today) {
+                if (lastStudyDate) {
+                    const yesterday = new Date();
+                    yesterday.setDate(yesterday.getDate() - 1);
+                    const yesterdayStr = yesterday.toISOString().split('T')[0];
+                    if (lastStudyDate === yesterdayStr) {
+                        streakDays++;
+                    } else {
+                        streakDays = 1;
+                    }
+                } else {
+                    streakDays = 1;
+                }
+                lastStudyDate = today;
+                saveState();
+                updateDashboard();
+            }
+        }
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  DASHBOARD
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        function updateDashboard() {
+            const total = weeksData.length;
+            const done = completedWeeks.size;
+            const pct = Math.round((done / total) * 100);
+
+            document.getElementById('completedCount').textContent = done;
+
+            let totalStars = 0;
+            let totalItems = 0;
+            for (const wid in starRatings) {
+                const week = starRatings[wid];
+                for (const key in week) {
+                    totalStars += week[key];
+                    totalItems++;
+                }
+            }
+            const confidencePct = totalItems > 0 ? Math.round((totalStars / (totalItems * 3)) * 100) : 0;
+            document.getElementById('totalConfidence').textContent = confidencePct;
+
+            document.getElementById('overallProgress').style.width = pct + '%';
+            document.getElementById('streakCount').textContent = streakDays;
+
+            const badges = document.querySelectorAll('.badge-small');
+            badges.forEach(b => {
+                const type = b.dataset.badge;
+                if (type === 'first' && done >= 1) b.classList.add('unlocked');
+                else if (type === 'all' && done >= total) b.classList.add('unlocked');
+                else if (type === 'confident' && confidencePct >= 70) b.classList.add('unlocked');
+            });
+        }
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  RENDER
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        function getRoleClass(role) {
+            const map = { tony: 'role-tony', daisuke: 'role-daisuke', rina: 'role-rina', jack: 'role-jack',
+                thompson: 'role-thompson', martinelli: 'role-martinelli', pub: 'role-pub' };
+            return map[role] || 'role-default';
+        }
+
+        function getLineKey(wid, idx) { return wid + '-' + idx; }
+
+        function renderWeekNav() {
+            const nav = document.getElementById('weekNav');
+            nav.innerHTML = '';
+            weeksData.forEach((w, i) => {
+                const btn = document.createElement('button');
+                btn.textContent = 'Week ' + w.id;
+                if (i === currentWeek) btn.classList.add('active');
+                if (completedWeeks.has(w.id)) btn.classList.add('done');
+                btn.addEventListener('click', () => {
+                    currentWeek = i;
+                    revealedLines.clear();
+                    saveState();
+                    renderAll();
+                });
+                nav.appendChild(btn);
+            });
+        }
+
+        function renderBlock() {
+            const container = document.getElementById('blockContent');
+            const week = weeksData[currentWeek];
+            if (!week) {
+                container.innerHTML = '<p style="text-align:center;padding:2rem;">Loading...</p>';
+                return;
+            }
+
+            const isTeacher = (currentMode === 'teacher');
+            const hint = document.getElementById('modeHint');
+            if (isTeacher) {
+                hint.textContent = '👨‍🏫 セリフが隠れています · タップで表示 · 🙈で再び隠す / Lines hidden · Tap to reveal · 🙈 to hide again';
+            } else {
+                hint.textContent = '📖 すべてのセリフが表示されています · 🔊をタップ / All lines visible · Tap 🔊';
+            }
+
+            let html = '';
+
+            html += `<div class="block-title">Week ${week.id}: ${week.title}</div>`;
+            html += `<div class="block-sub">${week.subtitle}</div>`;
+
+            html += `<div class="grammar-tip">📘 <strong>Grammar tip:</strong> ${week.grammar}</div>`;
+
+            // Vocab Bank
+            if (week.vocab && week.vocab.length > 0) {
+                html += `<div class="vocab-bank"><h4>🔑 キーフレーズ / Key Phrases</h4>`;
+                week.vocab.forEach(v => {
+                    html += `<div class="vocab-item">
+                                <span class="jp">${v.jp}</span>
+                                <span class="arrow">→</span>
+                                <span class="en">${v.en}</span>
+                             </div>`;
+                });
+                html += `</div>`;
+            }
+
+            // Culture Note
+            if (week.culture) {
+                html += `<div class="culture-note">
+                            <h4>🇦🇺 文化ノート / Culture Note</h4>
+                            <p>${week.culture.note}</p>
+                            <p><strong>💬 ${week.culture.phrase}</strong></p>
+                         </div>`;
+            }
+
+            // Speaking Practice with Recording
+            html += `<div class="speaking-practice">
+                <h4>🎤 スピーキング練習 / Speaking Practice</h4>
+                <div class="scenario">💬 ${week.speakingTask}</div>
+                <div class="practice-btn-group">
+                    <button class="practice-btn" id="speakTaskBtn">🔊 聞く / Listen</button>
+                    <button class="practice-btn primary" id="recordBtn">🎙️ 録音 / Record</button>
+                </div>
+<div class="recording-area" id="recordingArea">
+    <div class="status" id="recordingStatus">⏺️ 準備完了 / Ready</div>
+    <div class="practice-btn-group" style="margin-top:0.4rem;">
+        <button class="practice-btn" id="playbackBtn" disabled>▶️ 再生 / Playback</button>
+        <button class="practice-btn" id="deleteRecordBtn" style="display:none;">🗑️ 削除 / Delete</button>
+        <button class="practice-btn" id="downloadRecordBtn" style="display:none;">💾 保存 / Download</button>
+        <button class="practice-btn" id="stopRecordBtn">⏹️ 停止 / Stop</button>
+    </div>
+</div>
+            </div>`;
+
+            // Audio Speed Control
+            html += `<div class="audio-controls">
+                        <label>⏱️ 速度 / Speed:
+                            <input type="range" id="speedSlider" min="0.5" max="1.5" step="0.1" value="${speedRate}">
+                            <span class="speed-display" id="speedDisplay">${speedRate.toFixed(1)}x</span>
+                        </label>
+                     </div>`;
+
+            // Dialogue
+            html += `<div class="dialogue">`;
+            week.lines.forEach((line, idx) => {
+                const key = getLineKey(week.id, idx);
+                const roleHidden = hiddenRoles.has(line.role);
+                const isRevealed = revealedLines.has(key);
+
+                let isHidden = false;
+                if (roleHidden) {
+                    isHidden = true;
+                } else if (isTeacher && !isRevealed) {
+                    isHidden = true;
+                } else {
+                    isHidden = false;
+                }
+
+                const hiddenClass = isHidden ? 'hidden-line' : '';
+                const revealedClass = isRevealed ? 'revealed' : '';
+                const roleClass = getRoleClass(line.role);
+                const clickable = isTeacher && !roleHidden && isHidden;
+
+                let displayText = line.text;
+                let tapHint = '';
+                if (isHidden) {
+                    if (isTeacher) {
+                        tapHint = `💡 タップで表示 / Tap to reveal`;
+                        displayText = `[${line.speaker} の番です / Your turn, ${line.speaker}!]`;
+                    } else {
+                        displayText = '[非表示 / Hidden — 役割ボタンをタップ]';
+                    }
+                }
+
+                const showHideBtn = isTeacher && isRevealed && !roleHidden;
+                const ttsClass = !ttsAvailable ? 'tts-unavailable' : '';
+
+                html += `<div class="line ${hiddenClass} ${revealedClass} ${clickable ? 'clickable' : ''}" 
+                              data-line-key="${key}" 
+                              data-role="${line.role}" 
+                              data-text="${line.text.replace(/"/g, '&quot;')}">
+                            <span class="role-tag ${roleClass}">${line.speaker}</span>
+                            <span class="message">${isHidden ? `<span class="tap-hint">${tapHint || displayText}</span>` : displayText}</span>
+                            <span class="line-actions">
+                                <button class="tts-btn ${isHidden ? 'hidden-tts' : ''} ${ttsClass}" data-text="${line.text.replace(/"/g, '&quot;')}" title="${ttsAvailable ? '🔊 Listen' : '🔇 Voice unavailable'}">🔊</button>
+                                ${showHideBtn ? `<button class="hide-line-btn" data-line-key="${key}" title="🙈 再び隠す / Hide again">🙈</button>` : ''}
+                            </span>
+                         </div>`;
+            });
+            html += `</div>`;
+
+            // Practice Controls
+            html += `<div class="practice-controls" style="${!isTeacher ? 'opacity:0.6;' : ''}">
+                        <span class="label">👨‍🏫 役割 / Role:</span>
+                        <button data-role="tony" class="${hiddenRoles.has('tony') ? 'active-role' : ''}">🟡 Tony</button>
+                        <button data-role="daisuke" class="${hiddenRoles.has('daisuke') ? 'active-role' : ''}">🔵 Daisuke</button>
+                        <button data-role="rina" class="${hiddenRoles.has('rina') ? 'active-role' : ''}">🔴 Rina</button>
+                        <button data-role="jack" class="${hiddenRoles.has('jack') ? 'active-role' : ''}">🟢 Jack</button>
+                        <button data-role="thompson" class="${hiddenRoles.has('thompson') ? 'active-role' : ''}">🟠 Thompson</button>
+                        <button data-role="martinelli" class="${hiddenRoles.has('martinelli') ? 'active-role' : ''}">🟣 Martinelli</button>
+                        <button data-role="pub" class="${hiddenRoles.has('pub') ? 'active-role' : ''}">⚪ Pub</button>
+                        ${isTeacher ? `
+                            <button class="reveal-all-btn" id="revealAllBtn">📖 すべて表示</button>
+                            <button class="hide-all-btn" id="hideAllBtn">🙈 すべて隠す</button>
+                        ` : ''}
+                        <span class="hint">${isTeacher ? 'タップで表示 · 🙈で1行だけ隠す / Tap to reveal · 🙈 to hide one line' : 'ティーチャーモードに切り替えて使用 / Switch to Teacher Mode'}</span>
+                     </div>`;
+
+            // Comprehension
+            html += `<div class="comprehension"><h3>📝 理解度チェック / Comprehension</h3>`;
+            week.quiz.forEach((q, qi) => {
+                const key = week.id + '-' + qi;
+                const revealed = quizRevealed[key] || false;
+                html += `<div class="quiz-item" data-quiz="${key}">
+                            <div class="q">${qi+1}. ${q.q}</div>
+                            <div class="options">`;
+                q.options.forEach((opt, oi) => {
+                    let cls = '';
+                    if (revealed) {
+                        if (oi === q.correct) cls = 'correct';
+                        else cls = 'wrong';
+                    }
+                    html +=
+                        `<button class="${cls}" data-opt="${oi}" data-quiz="${key}" data-correct="${q.correct}">${opt}</button>`;
+                });
+                html += `</div>
+                            <div class="answer-reveal ${revealed ? 'show' : ''}">✅ 正解 / Correct: <strong>${q.options[q.correct]}</strong></div>
+                         </div>`;
+            });
+            html += `</div>`;
+
+            // Open-ended
+            html += `<div style="background:#f7efe7;padding:0.8rem 1rem;border-radius:16px;margin:0.8rem 0;border-left:5px solid #bc7a4a;">
+                        <strong>💬 話してみよう / Let's Talk:</strong> ${week.openEnded}
+                        <div style="font-size:0.82rem;font-weight:500;color:#4a3a2e;margin-top:0.2rem;">📌 レッスンで自由に話し合ってみましょう / Use this for free conversation in class.</div>
+                     </div>`;
+
+            // Homework
+            html += `<div class="homework">
+                        <h3>📋 宿題 / Homework</h3>
+                        <div class="hw-task">${week.homework.task}</div>
+                        <div class="hw-example">${week.homework.example}</div>
+                        <div class="hw-note">${week.homework.note}</div>
+                     </div>`;
+
+            // Homework Check-in
+            if (isTeacher) {
+                const ckKey = 'checkin-' + week.id;
+                const ckRevealed = checkinRevealed[ckKey] || false;
+                html += `<div class="homework-checkin">
+                            <h4>👨‍🏫 宿題チェック / Homework Check-in</h4>
+                            <div class="checkin-prompt">❓ ${week.checkin.prompt}</div>
+                            <div class="checkin-tip">💡 ${week.checkin.tip}</div>
+                            <span class="checkin-reveal" data-ck="${ckKey}">${ckRevealed ? '🙈 ヒントを隠す / Hide hint' : '💡 ヒントを見る / Show hint'}</span>
+                            <div class="checkin-answer ${ckRevealed ? 'show' : ''}">${week.checkin.suggested}</div>
+                         </div>`;
+            }
+
+            // My Notes
+            const noteKey = 'note-' + week.id;
+            const savedNote = weekNotes[noteKey] || '';
+            html += `<div class="notes-section">
+                        <h4>📝 メモ / My Notes</h4>
+                        <textarea id="weekNotes" placeholder="気づいたことを書きましょう / Write your observations...">${savedNote}</textarea>
+                        <div class="note-actions">
+                            <button class="primary" id="saveNoteBtn">💾 保存 / Save</button>
+                            <button id="clearNoteBtn">🗑️ クリア / Clear</button>
+                        </div>
+                        <div class="save-status" id="saveStatus">✅ 保存しました / Saved!</div>
+                     </div>`;
+
+            // Self-Assessment
+            const ratings = starRatings[week.id] || { understood: 0, respond: 0, confident: 0 };
+            html += `<div class="self-assessment"><h3>⭐ 自己評価 / Self-Assessment</h3>`;
+            const saItems = [
+                { key: 'understood', label: '理解できた / I understood' },
+                { key: 'respond', label: '答えられた / I could respond' },
+                { key: 'confident', label: '自信があった / I felt confident' }
+            ];
+            saItems.forEach(sa => {
+                html += `<div class="sa-item">
+                            <span class="sa-label">${sa.label}</span>
+                            <span class="stars" data-sa="${sa.key}">`;
+                for (let i = 1; i <= 3; i++) {
+                    const on = i <= ratings[sa.key] ? 'on' : '';
+                    html +=
+                        `<button class="${on}" data-week="${week.id}" data-sa="${sa.key}" data-val="${i}">★</button>`;
+                }
+                html += `</span></div>`;
+            });
+            html += `</div>`;
+
+            // Mark Complete
+            const isDone = completedWeeks.has(week.id);
+            html += `<div class="mark-complete">
+                        <button class="${isDone ? 'done' : ''}" data-week="${week.id}">
+                            ${isDone ? '✅ 完了！ / Complete!' : '✅ 完了にする / Mark Complete'}
+                        </button>
+                     </div>`;
+
+            container.innerHTML = html;
+
+            // ─── Setup recording after rendering ───
+            setupRecording();
+
+            // ─── Event Listeners ───
+
+            // TTS
+            container.querySelectorAll('.tts-btn:not(.hidden-tts)').forEach(btn => {
+                btn.addEventListener('click', e => {
+                    e.stopPropagation();
+                    if (!ttsAvailable) {
+                        updateSpeechBanner();
+                        return;
+                    }
+                    const text = btn.dataset.text;
+                    if (text) speakText(text);
+                });
+            });
+
+            // Speaking task TTS
+            const speakTaskBtn = document.getElementById('speakTaskBtn');
+            if (speakTaskBtn) {
+                speakTaskBtn.addEventListener('click', () => {
+                    speakText(week.speakingTask);
+                });
+            }
+
+            // Speed slider
+            const speedSlider = document.getElementById('speedSlider');
+            const speedDisplay = document.getElementById('speedDisplay');
+            if (speedSlider) {
+                speedSlider.addEventListener('input', () => {
+                    speedRate = parseFloat(speedSlider.value);
+                    speedDisplay.textContent = speedRate.toFixed(1) + 'x';
+                    saveState();
+                });
+            }
+
+            // Line click → reveal
+            container.querySelectorAll('.line.clickable').forEach(line => {
+                line.addEventListener('click', () => {
+                    const key = line.dataset.lineKey;
+                    if (!key) return;
+                    const role = line.dataset.role;
+                    if (hiddenRoles.has(role)) return;
+                    if (!revealedLines.has(key)) {
+                        revealedLines.add(key);
+                        saveState();
+                        renderBlock();
+                    }
+                });
+            });
+
+            // Hide line button
+            container.querySelectorAll('.hide-line-btn').forEach(btn => {
+                btn.addEventListener('click', e => {
+                    e.stopPropagation();
+                    const key = btn.dataset.lineKey;
+                    if (key && revealedLines.has(key)) {
+                        revealedLines.delete(key);
+                        saveState();
+                        renderBlock();
+                    }
+                });
+            });
+
+            // Role buttons
+            container.querySelectorAll('.practice-controls button[data-role]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const role = btn.dataset.role;
+                    if (hiddenRoles.has(role)) {
+                        hiddenRoles.delete(role);
+                    } else {
+                        hiddenRoles.add(role);
+                        const weekData = weeksData[currentWeek];
+                        weekData.lines.forEach((line, idx) => {
+                            if (line.role === role) {
+                                const key = getLineKey(weekData.id, idx);
+                                revealedLines.delete(key);
+                            }
+                        });
+                    }
+                    saveState();
+                    renderBlock();
+                });
+            });
+
+            // Reveal All
+            const raBtn = document.getElementById('revealAllBtn');
+            if (raBtn) {
+                raBtn.addEventListener('click', () => {
+                    const weekData = weeksData[currentWeek];
+                    weekData.lines.forEach((line, idx) => {
+                        const key = getLineKey(weekData.id, idx);
+                        if (!hiddenRoles.has(line.role)) {
+                            revealedLines.add(key);
+                        }
+                    });
+                    saveState();
+                    renderBlock();
+                });
+            }
+
+            // Hide All
+            const haBtn = document.getElementById('hideAllBtn');
+            if (haBtn) {
+                haBtn.addEventListener('click', () => {
+                    revealedLines.clear();
+                    saveState();
+                    renderBlock();
+                });
+            }
+
+            // Quiz
+            container.querySelectorAll('.quiz-item .options button').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const key = btn.dataset.quiz;
+                    const correct = parseInt(btn.dataset.correct);
+                    const chosen = parseInt(btn.dataset.opt);
+                    quizRevealed[key] = true;
+                    const item = btn.closest('.quiz-item');
+                    const reveal = item.querySelector('.answer-reveal');
+                    if (reveal) reveal.classList.add('show');
+                    item.querySelectorAll('.options button').forEach(b => {
+                        const oi = parseInt(b.dataset.opt);
+                        if (oi === correct) b.classList.add('correct');
+                        else if (oi === chosen && oi !== correct) b.classList.add('wrong');
+                    });
+                    saveState();
+                });
+            });
+
+            // Mark complete
+            const mcBtn = container.querySelector('.mark-complete button');
+            if (mcBtn) {
+                mcBtn.addEventListener('click', () => {
+                    const wid = parseInt(mcBtn.dataset.week);
+                    if (completedWeeks.has(wid)) completedWeeks.delete(wid);
+                    else completedWeeks.add(wid);
+                    saveState();
+                    renderAll();
+                });
+            }
+
+            // Stars
+            container.querySelectorAll('.stars button').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const wid = parseInt(btn.dataset.week);
+                    const sa = btn.dataset.sa;
+                    const val = parseInt(btn.dataset.val);
+                    if (!starRatings[wid]) starRatings[wid] = { understood: 0, respond: 0, confident: 0 };
+                    starRatings[wid][sa] = val;
+                    saveState();
+                    renderBlock();
+                });
+            });
+
+            // Homework check-in
+            container.querySelectorAll('.checkin-reveal').forEach(el => {
+                el.addEventListener('click', () => {
+                    const key = el.dataset.ck;
+                    if (checkinRevealed[key]) {
+                        delete checkinRevealed[key];
+                    } else {
+                        checkinRevealed[key] = true;
+                    }
+                    saveState();
+                    renderBlock();
+                });
+            });
+
+            // Notes
+            const noteTextarea = document.getElementById('weekNotes');
+            const saveNoteBtn = document.getElementById('saveNoteBtn');
+            const clearNoteBtn = document.getElementById('clearNoteBtn');
+            const saveStatus = document.getElementById('saveStatus');
+
+            if (saveNoteBtn && noteTextarea) {
+                saveNoteBtn.addEventListener('click', () => {
+                    const noteKey2 = 'note-' + week.id;
+                    weekNotes[noteKey2] = noteTextarea.value;
+                    saveState();
+                    if (saveStatus) {
+                        saveStatus.classList.add('show');
+                        setTimeout(() => {
+                            saveStatus.classList.remove('show');
+                        }, 2000);
+                    }
+                });
+            }
+
+            if (clearNoteBtn && noteTextarea) {
+                clearNoteBtn.addEventListener('click', () => {
+                    if (confirm('メモをクリアしますか？ / Clear your notes?')) {
+                        noteTextarea.value = '';
+                        const noteKey2 = 'note-' + week.id;
+                        delete weekNotes[noteKey2];
+                        saveState();
+                        if (saveStatus) {
+                            saveStatus.classList.add('show');
+                            saveStatus.textContent = '🗑️ クリアしました / Cleared!';
+                            setTimeout(() => {
+                                saveStatus.classList.remove('show');
+                                saveStatus.textContent = '✅ 保存しました / Saved!';
+                            }, 2000);
+                        }
+                    }
+                });
+            }
+
+            updateDashboard();
+        }
+
+        function renderAll() {
+            renderWeekNav();
+            renderBlock();
+            document.querySelectorAll('.mode-toggle button').forEach(btn => {
+                const mode = btn.dataset.mode;
+                if (mode === currentMode) btn.classList.add('active');
+                else btn.classList.remove('active');
+            });
+            updateDashboard();
+        }
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  RECORDING FUNCTIONALITY WITH COUNTDOWN
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+let mediaRecorder = null;
+let audioChunks = [];
+let isRecording = false;
+let recordedBlob = null;
+let micAvailable = false;
+let countdownTimer = null;
+
+async function setupRecording() {
+    console.log('🔍 setupRecording() called');
+    
+    const recordBtn = document.getElementById('recordBtn');
+    const recordingArea = document.getElementById('recordingArea');
+    const recordingStatus = document.getElementById('recordingStatus');
+    const playbackBtn = document.getElementById('playbackBtn');
+    const stopRecordBtn = document.getElementById('stopRecordBtn');
+    const downloadBtn = document.getElementById('downloadRecordBtn');
+    const deleteBtn = document.getElementById('deleteRecordBtn');
+
+    if (!recordBtn) {
+        console.warn('⚠️ recordBtn not found!');
+        return;
+    }
+    
+    console.log('✅ recordBtn found, attaching event...');
+
+    // Check if microphone devices exist (without asking permission)
+    const micCheck = await checkMicrophoneAvailability();
+    micAvailable = micCheck.available;
+    
+    // Update status message
+    if (recordingStatus) {
+        if (micAvailable) {
+            recordingStatus.textContent = '✅ ' + micCheck.message;
+            recordingStatus.style.color = '#2a5a2a';
+            recordingStatus.className = 'status success';
+        } else {
+            recordingStatus.textContent = '⚠️ ' + micCheck.message;
+            recordingStatus.style.color = '#c62828';
+            recordingStatus.className = 'status error';
+            if (recordingArea) recordingArea.classList.add('active');
+            recordBtn.disabled = true;
+            recordBtn.style.opacity = '0.5';
+            recordBtn.style.cursor = 'not-allowed';
+            recordBtn.title = micCheck.shortMessage;
+        }
+    }
+
+    recordBtn.addEventListener('click', async function recordClick() {
+        console.log('🎙️ Record button clicked, isRecording:', isRecording);
+        
+        // Check if we already have a recording
+        if (isRecording) {
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+                console.log('⏹️ Stopping recording...');
+                if (countdownTimer) {
+                    clearInterval(countdownTimer);
+                    countdownTimer = null;
+                }
+            }
+            return;
+        }
+
+        // ─── START COUNTDOWN ───
+        let count = 3;
+        recordingStatus.textContent = '⏳ 準備中... ' + count + ' / Ready...';
+        recordingStatus.style.color = '#f5b342';
+        recordingStatus.className = 'status';
+        recordBtn.disabled = true;
+        recordBtn.textContent = '⏳ ' + count;
+        recordBtn.style.opacity = '0.7';
+
+        if (recordingArea) {
+            recordingArea.classList.add('active');
+        }
+
+        countdownTimer = setInterval(async () => {
+            count--;
+            if (count > 0) {
+                recordingStatus.textContent = '⏳ 準備中... ' + count + ' / Ready...';
+                recordingStatus.style.color = '#f5b342';
+                recordBtn.textContent = '⏳ ' + count;
+                // Play tick sound
+                try {
+                    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.frequency.value = 800;
+                    gain.gain.value = 0.08;
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.05);
+                } catch (e) {}
+            } else {
+                clearInterval(countdownTimer);
+                countdownTimer = null;
+                recordBtn.textContent = '🔴 録音中...';
+                recordBtn.style.opacity = '1';
+                recordBtn.disabled = false;
+                recordingStatus.textContent = '🔴 録音中... / Recording...';
+                recordingStatus.style.color = '#c62828';
+                recordingStatus.className = 'status';
+                
+                // Start recording - THIS IS WHERE getUserMedia() IS CALLED
+                await startRecording();
+            }
+        }, 800);
+    });
+
+    // ─── ACTUAL RECORDING FUNCTION ───
+    async function startRecording() {
+        try {
+            console.log('🎤 Requesting microphone...');
+            // This is the ONLY place getUserMedia() is called
+            // This triggers the browser permission prompt
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            console.log('✅ Microphone granted!');
+            
+            // Update micAvailable
+            micAvailable = true;
+            
+            mediaRecorder = new MediaRecorder(stream);
+            audioChunks = [];
+
+            mediaRecorder.ondataavailable = (e) => {
+                if (e.data.size > 0) {
+                    audioChunks.push(e.data);
+                    console.log('📦 Audio chunk received:', e.data.size);
+                }
+            };
+
+            mediaRecorder.onstop = () => {
+                console.log('⏹️ Recording stopped');
+                recordedBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                const audioUrl = URL.createObjectURL(recordedBlob);
+                const audio = new Audio(audioUrl);
+                
+                playbackBtn.disabled = false;
+                recordingStatus.textContent = '⏹️ 録音完了！ / Recording complete!';
+                recordingStatus.style.color = '#2a5a2a';
+                recordingStatus.className = 'status success';
+                isRecording = false;
+                recordBtn.textContent = '🎙️ 再録音 / Record Again';
+                recordBtn.classList.remove('recording');
+                recordBtn.disabled = false;
+                recordBtn.style.opacity = '1';
+                
+                if (downloadBtn) {
+                    downloadBtn.style.display = 'inline-block';
+                    downloadBtn.onclick = () => {
+                        const a = document.createElement('a');
+                        a.href = audioUrl;
+                        a.download = `recording-week${currentWeek+1}.webm`;
+                        a.click();
+                    };
+                }
+                
+                if (deleteBtn) {
+                    deleteBtn.style.display = 'inline-block';
+                    deleteBtn.onclick = () => {
+                        recordedBlob = null;
+                        audioChunks = [];
+                        playbackBtn.disabled = true;
+                        deleteBtn.style.display = 'none';
+                        downloadBtn.style.display = 'none';
+                        recordingStatus.textContent = '🗑️ 録音を削除しました / Recording deleted';
+                        recordingStatus.style.color = '#4a3a2e';
+                        recordingStatus.className = 'status';
+                        recordBtn.textContent = '🎙️ 録音 / Record';
+                        recordBtn.disabled = false;
+                        recordBtn.style.opacity = '1';
+                        recordBtn.style.cursor = 'pointer';
+                        if (window.audioUrl) {
+                            URL.revokeObjectURL(window.audioUrl);
+                            window.audioUrl = null;
+                        }
+                    };
+                }
+                
+                playbackBtn.onclick = () => {
+                    audio.play();
+                    console.log('▶️ Playing back recording');
+                };
+                
+                stream.getTracks().forEach(track => track.stop());
+                console.log('🔇 Microphone tracks stopped');
+            };
+
+            mediaRecorder.start();
+            isRecording = true;
+            recordingStatus.textContent = '🔴 録音中... / Recording...';
+            recordingStatus.style.color = '#c62828';
+            recordingStatus.className = 'status';
+            recordBtn.textContent = '⏹️ 停止 / Stop';
+            recordBtn.classList.add('recording');
+            playbackBtn.disabled = true;
+            if (downloadBtn) downloadBtn.style.display = 'none';
+            if (deleteBtn) deleteBtn.style.display = 'none';
+            
+            console.log('🔴 Recording started');
+
+        } catch (err) {
+            console.error('❌ Microphone error:', err);
+            micAvailable = false;
+            
+            if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+                recordingStatus.textContent = '🚫 マイクへのアクセスが拒否されました / Microphone access denied';
+            } else if (err.name === 'NotFoundError') {
+                recordingStatus.textContent = '🎤 マイクが見つかりません / No microphone found';
+            } else {
+                recordingStatus.textContent = '❌ マイクエラー: ' + err.message;
+            }
+            recordingStatus.style.color = '#c62828';
+            recordingStatus.className = 'status error';
+            recordBtn.textContent = '🎙️ 録音 / Record';
+            recordBtn.classList.remove('recording');
+            recordBtn.disabled = false;
+            recordBtn.style.opacity = '1';
+        }
+    }
+
+    if (stopRecordBtn) {
+        stopRecordBtn.addEventListener('click', () => {
+            console.log('⏹️ Stop button clicked');
+            if (countdownTimer) {
+                clearInterval(countdownTimer);
+                countdownTimer = null;
+                recordBtn.textContent = '🎙️ 録音 / Record';
+                recordBtn.disabled = false;
+                recordBtn.style.opacity = '1';
+                recordingStatus.textContent = '⏹️ キャンセルしました / Cancelled';
+                recordingStatus.style.color = '#4a3a2e';
+                recordingStatus.className = 'status';
+                return;
+            }
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+            }
+        });
+    }
+}
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  MODE TOGGLE
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        document.querySelectorAll('.mode-toggle button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const newMode = btn.dataset.mode;
+                if (newMode === currentMode) return;
+                currentMode = newMode;
+                if (currentMode === 'read') {
+                    hiddenRoles.clear();
+                    revealedLines.clear();
+                }
+                saveState();
+                renderAll();
+            });
+        });
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  INIT
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        loadState();
+
+        // Initial render
+        renderAll();
+
+        // Check TTS availability
+        checkTTSAvailability();
+
+        if (window.speechSynthesis) {
+            window.speechSynthesis.onvoiceschanged = function() {
+                const voices = window.speechSynthesis.getVoices();
+                if (voices && voices.length > 0) {
+                    ttsAvailable = true;
+                    ttsChecked = true;
+                    updateSpeechBanner();
+                    renderBlock();
+                }
+            };
+        }
+
+        // ─── Modal events ───
+        document.addEventListener('DOMContentLoaded', function() {
+            const helpBtn = document.getElementById('helpBtn');
+            const closeBtns = document.querySelectorAll('#modalCloseBtn, #modalCloseBtn2');
+            const overlay = document.getElementById('modalOverlay');
+
+            helpBtn.addEventListener('click', openModal);
+
+            closeBtns.forEach(btn => {
+                btn.addEventListener('click', closeModal);
+            });
+
+            overlay.addEventListener('click', function(e) {
+                if (e.target === overlay) closeModal();
+            });
+
+            if (shouldShowModal()) {
+                setTimeout(openModal, 600);
+            }
+        });
+
+        function openModal() {
+            document.getElementById('modalOverlay').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('open');
+            document.body.style.overflow = '';
+            const cb = document.getElementById('dontShowAgain');
+            if (cb && cb.checked) {
+                try {
+                    localStorage.setItem('rinaDaisukeModalDismissed_v2', 'true');
+                } catch (_) {}
+            }
+        }
+
+        function shouldShowModal() {
+            try {
+                return localStorage.getItem('rinaDaisukeModalDismissed_v2') !== 'true';
+            } catch (_) { return true; }
+        }
+
+        // ─── Stop button ───
+        const stopBtn = document.createElement('button');
+        stopBtn.textContent = '⏹️ Stop';
+        stopBtn.style.cssText =
+            'position:fixed;bottom:20px;right:20px;background:#1a1a1a;color:#fff;border:none;border-radius:40px;padding:0.6rem 1.4rem;font-size:0.85rem;font-weight:700;cursor:pointer;z-index:1000;font-family:inherit;box-shadow:0 4px 16px rgba(0,0,0,0.2);min-height:48px;';
+        stopBtn.addEventListener('click', () => {
+            if (window.speechSynthesis) window.speechSynthesis.cancel();
+        });
+        document.body.appendChild(stopBtn);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === ' ' && e.target === document.body) {
+                e.preventDefault();
+                if (window.speechSynthesis) window.speechSynthesis.cancel();
+            }
+        });
+
+        console.log('🎧 Rina & Daisuke English Adventure v1.1 loaded!');
+        console.log('📖 All 6 weeks loaded with ' + weeksData.reduce((sum, w) => sum + w.lines.length, 0) + ' sentences');
+        console.log('🔊 TTS available:', ttsAvailable);
+    </script>
+
+</body>
+</html>
